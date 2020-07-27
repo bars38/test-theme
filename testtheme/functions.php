@@ -250,7 +250,7 @@ add_action( 'init', 'create_posttype' );
 * Creating a function to create our cpt
 */
  
-function custom_post_type() {
+function at_custom_post_type() {
  
 // set UI labels for cpt
     $labels = array(
@@ -303,4 +303,4 @@ function custom_post_type() {
 * unnecessarily executed. 
 */
  
-add_action( 'init', 'custom_post_type', 0 );
+add_action( 'init', 'at_custom_post_type', 0 );
