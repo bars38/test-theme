@@ -28,7 +28,8 @@
 		add_theme_support('title-tag');
 	}
 	add_image_size('page_slide_thumb', 1920, 900, true);
-        add_image_size('post_medium', 300, 200, array( 'center', 'center' ) );
+	add_image_size('post_medium', 300, 200, array( 'center', 'center' ) );
+	add_image_size('post_max_medium', 600, 500, array( 'center', 'center' ) );
 
 	function testtheme_scripts(){
 		wp_deregister_style( 'open-sans' );
@@ -221,3 +222,85 @@ function emails_list_init(){
      echo '</ul>';
 }
 
+
+
+// Create custom post type function for «Attachments»
+function create_posttype() {
+ 
+    register_post_type( 'attachments',
+    // create custom post options
+        array(
+            'labels' => array(
+                'name' => __( 'Attachments' ),
+                'singular_name' => __( 'Attachment' )
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => array('slug' => 'attachments'),
+            'show_in_rest' => true,
+ 
+        )
+    );
+}
+// hook for our function cpt
+add_action( 'init', 'create_posttype' );
+
+
+/*
+* Creating a function to create our cpt
+*/
+ 
+function custom_post_type() {
+ 
+// set UI labels for cpt
+    $labels = array(
+        'name'                => _x( 'Attachments', 'Post Type General Name', 'texttheme' ),
+        'singular_name'       => _x( 'Attachment', 'Post Type Singular Name', 'texttheme' ),
+        'menu_name'           => __( 'Attachments', 'texttheme' ),
+        'parent_item_colon'   => __( 'Parent Attachment', 'texttheme' ),
+        'all_items'           => __( 'All Attachments', 'texttheme' ),
+        'view_item'           => __( 'View Attachment', 'texttheme' ),
+        'add_new_item'        => __( 'Add New Attachment', 'texttheme' ),
+        'add_new'             => __( 'Add New', 'texttheme' ),
+        'edit_item'           => __( 'Edit Attachment', 'texttheme' ),
+        'update_item'         => __( 'Update Attachment', 'texttheme' ),
+        'search_items'        => __( 'Search Attachment', 'texttheme' ),
+        'not_found'           => __( 'Not Found', 'texttheme' ),
+        'not_found_in_trash'  => __( 'Not found in Trash', 'texttheme' ),
+    );
+     
+// set other options for cpt
+     
+    $args = array(
+        'label'               => __( 'attachment', 'texttheme' ),
+        'description'         => __( 'Attachment', 'texttheme' ),
+        'labels'              => $labels,
+        // features this CPT supports in editor
+        'supports'            => false,
+        'hierarchical'        => false,
+        'public'              => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'show_in_nav_menus'   => true,
+        'show_in_admin_bar'   => true,
+        'menu_position'       => 5,
+        'can_export'          => true,
+        'has_archive'         => true,
+        'exclude_from_search' => false,
+        'publicly_queryable'  => true,
+        'capability_type'     => 'post',
+        'show_in_rest' => true,
+ 
+    );
+     
+    // Registering your Custom Post Type
+    register_post_type( 'attachment', $args );
+ 
+}
+ 
+/* Hook into the 'init' action so that the function
+* Containing our post type registration is not 
+* unnecessarily executed. 
+*/
+ 
+add_action( 'init', 'custom_post_type', 0 );
